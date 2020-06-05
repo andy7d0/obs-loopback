@@ -14,9 +14,9 @@ and can be in:
 - $HOME/.config/obs/obs-plugins/rtmp-services/services.json
 - /usr/share/obs/obs-plugins/rtmp-services/services.json
 or, in the case of a portable version
-- INSTALL_DIR/data/obs-plugins/rtmp-services/services.json
-where INSTALL_DIR is the directory OBS installed to
-(i.e. folder INSTALL_DIR/bin exists)
+- _INSTALL_DIR_/data/obs-plugins/rtmp-services/services.json
+where _INSTALL_DIR_ is the directory OBS installed to
+(i.e. folder _INSTALL_DIR_/bin exists)
 
 
 then we should _patch_ this file including special an our streaming service
@@ -32,7 +32,7 @@ like this:
     		"common": true,
     		"servers": [ {
     			"name": "default",
-    			"url" : "/dev/video10:/tmp/obs-pa-sink"
+    			"url" : "/dev/video10:/tmp/obs-pa-pipe"
     		}]
     		,
             "recommended": {
@@ -41,6 +41,7 @@ like this:
     	},
     	
 ....... OTHER serices items ....
+
 }
 ```
 
@@ -55,16 +56,20 @@ replace 10 with number as you want, and correspended with
 the number in *url* item in the service file
 
 ```
-pactl load-module module-pipe-source file=/tmp/obs-pa-sink channels=1 source_name=OBS_pipe source_properties=device.description=YOUR-VIRTUAL-MIC-NAME
+pactl load-module module-pipe-source file=/tmp/obs-pa-pipe channels=1 source_name=OBS_pipe source_properties=device.description=YOUR-VIRTUAL-MIC-NAME
 ```
-also replace /tmp/obs-pa-sink with path as you want, and correspended with 
+also replace /tmp/obs-pa-pipe with path as you want, and correspended with 
 the path in *url* item in the service file
+
+starting video loopback device and audio pipe can be done 
+at user session startup via corresponging system/shell user setting
+which are different among distributions and desktop enviromets
 
 ### DONE
 Now we can select our *LOOPBACK* service in the streaming settings
 and Start Streaming
 
-now you can use
+and use
 _YOUR-VIRTUAL-CAMERA-NAME_ as a camera in zoom/skype etc
 and
 _YOUR-VIRTUAL-MIC-NAME_ as a microphone there
