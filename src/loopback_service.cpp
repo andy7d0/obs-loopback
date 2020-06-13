@@ -62,7 +62,7 @@ static const char *loopback_key(void *data)
 {
 	UNUSED_PARAMETER(data);
 //	struct loopback *service = data;
-	return "";
+	return "---";
 }
 
 static const char* loopback_output_type(void* data) {
@@ -556,6 +556,32 @@ const char *get_module_name(void)
 	return "loopback-services";
 }
 
+#include <obs-frontend-api.h>
+#include <QMainWindow>
+#include <QAction>
+
+
+static void init_service() {
+	printf("---LB init service\n");
+	//obs_data_t *data = obs_data_create_from_json(const char *json_string)
+	//obs_data_t *settings = obs_data_get_obj(data, "settings");
+	obs_data_t *settings = obs_data_create();
+	obs_data_set_bool(settings,"bwtest",false);
+	obs_data_set_string(settings,"key","");
+	obs_data_set_string(settings,"url","/dev/video10:/var/opt/obs-ext/pa-pipe");
+	obs_data_set_string(settings,"service","LOOPPIPE");
+	
+	obs_service_t * service = obs_service_create("loopback", "default_service", NULL, nullptr);
+	obs_service_update(service, settings);
+	obs_frontend_set_streaming_service(service);
+	obs_frontend_save_streaming_service();
+	
+	obs_service_release(service);
+	//obs_data_release(settings);
+	//obs_data_release(data);
+	obs_data_release(settings);
+}
+
 bool obs_module_load(void)
 {
 	printf("REG lb-service");
@@ -563,12 +589,30 @@ bool obs_module_load(void)
 	printf("REG lb-output");
 	obs_register_output(&loopback_output);
 	
-	//obs_output_set_service(&loopback_output, &loopback_service);
-	
+	//QMainWindow* main_window = (QMainWindow*)obs_frontend_get_main_window();
+	QAction *action = (QAction*)obs_frontend_add_tools_menu_qaction(
+		obs_module_text("Loopback service"));
+
+	//obs_frontend_push_ui_translation(obs_module_get_string);
+	//prop = new V4l2sinkProperties(main_window);
+	//obs_frontend_pop_ui_translation();
+
+	auto menu_cb = []
+	{
+		printf("---LB menu click\n");
+		init_service();
+	};
+
+	action->connect(action, &QAction::triggered, menu_cb);
+		
 	return true;
 }
 
 void obs_module_unload(void)
 {
+}
+
+void obs_module_post_load(void) {
+	init_service();
 }
 

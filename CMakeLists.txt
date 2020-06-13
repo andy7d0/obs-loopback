@@ -8,11 +8,11 @@ find_package(LibObs REQUIRED)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_PREFIX_PATH "${QTDIR}")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-#set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 
-#find_package(Qt5Core REQUIRED)
-#find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Widgets REQUIRED)
 find_package(PulseAudio)
 
 if(NOT PULSEAUDIO_FOUND)
@@ -42,9 +42,9 @@ target_link_libraries(obs-loopback
 	libobs
 	pulse-simple
 	${PULSEAUDIO_LIBRARY}
+	Qt5::Core
+	Qt5::Widgets
 	)
-#	Qt5::Core
-#	Qt5::Widgets
 
 if(ARCH EQUAL 64)
 	set(ARCH_NAME "x86_64")

@@ -19,12 +19,12 @@ where _INSTALL_DIR_ is the directory OBS installed to
 (i.e. folder _INSTALL_DIR_/bin exists)
 
 
-then we should _patch_ this file including special an our streaming service
+then we should **patch** this file including special an our streaming service
 like this:
 
 ```json
 {
-....... OTHER serices items ....
+....... OTHER json code ....
 
     "services": [
     	{
@@ -41,7 +41,9 @@ like this:
     	},
     	
 ....... OTHER serices items ....
+	],
 
+....... OTHER json code ....
 }
 ```
 
@@ -88,7 +90,7 @@ git clone --recursive https://github.com/obsproject/obs-studio.git
 git clone https://github.com/andy7d0/obs-loopback.git
 cd obs-loopback
 mkdir build && cd build
-cmake -DLIBOBS_INCLUDE_DIR="../../obs-studio/libobs" -DCMAKE_INSTALL_PREFIX=/usr ..
+cmake --debug-find -DobsPath="../obs-studio" -DCMAKE_INSTALL_PREFIX=/usr ../
 make -j4
 sudo make install
 ```
